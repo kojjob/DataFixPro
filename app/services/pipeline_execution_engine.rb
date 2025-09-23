@@ -101,13 +101,13 @@ class PipelineExecutionEngine
 
   def create_pipeline_run
     pipeline.pipeline_runs.create!(
-      status: 'running',
+      status: "running",
       started_at: Time.current,
-      trigger_type: options[:trigger_type] || 'manual',
+      trigger_type: options[:trigger_type] || "manual",
       metadata: {
         execution_options: options,
         environment: Rails.env,
-        executor: 'PipelineExecutionEngine'
+        executor: "PipelineExecutionEngine"
       }
     )
   end
@@ -123,7 +123,7 @@ class PipelineExecutionEngine
     end
 
     pipeline_run.update!(
-      status: 'completed',
+      status: "completed",
       completed_at: Time.current,
       metadata: pipeline_run.metadata.merge({
         dry_run: true,
@@ -250,7 +250,7 @@ class PipelineExecutionEngine
 
     # Wait for all threads to complete
     threads.each { |t| t.join(30) } # 30 second timeout
-    
+
     # Check if any threads are still alive
     stuck_threads = threads.select(&:alive?)
     if stuck_threads.any?
@@ -327,7 +327,7 @@ class PipelineExecutionEngine
   def create_step_execution(pipeline_run, step, simulate: false)
     step_execution = pipeline_run.step_executions.create!(
       pipeline_step: step,
-      status: simulate ? 'skipped' : 'running',
+      status: simulate ? "skipped" : "running",
       step_type: step.step_type,
       started_at: Time.current,
       input_rows: 0,
@@ -336,7 +336,7 @@ class PipelineExecutionEngine
     )
 
     if simulate
-      step_execution.mark_skipped!('Dry run simulation')
+      step_execution.mark_skipped!("Dry run simulation")
     end
 
     step_execution
@@ -397,13 +397,13 @@ class PipelineExecutionEngine
   def estimate_step_duration(step)
     # Base duration estimates by step type (in seconds)
     base_durations = {
-      'extract' => 30,
-      'transform' => 15,
-      'filter' => 10,
-      'validate' => 20,
-      'aggregate' => 25,
-      'load' => 35,
-      'custom' => 20
+      "extract" => 30,
+      "transform" => 15,
+      "filter" => 10,
+      "validate" => 20,
+      "aggregate" => 25,
+      "load" => 35,
+      "custom" => 20
     }
 
     base_durations[step.step_type] || 20
@@ -420,14 +420,14 @@ class PipelineExecutionEngine
 
     # Add complexity for specific step types
     case step.step_type
-    when 'transform'
-      transformations = config['transformations'] || []
+    when "transform"
+      transformations = config["transformations"] || []
       multiplier += (transformations.count * 0.2)
-    when 'validate'
-      validations = config['validations'] || []
+    when "validate"
+      validations = config["validations"] || []
       multiplier += (validations.count * 0.15)
-    when 'aggregate'
-      aggregations = config['aggregations'] || []
+    when "aggregate"
+      aggregations = config["aggregations"] || []
       multiplier += (aggregations.count * 0.25)
     end
 
@@ -440,12 +440,12 @@ class PipelineExecutionEngine
     return [] if previous_step_position < 1
 
     previous_step = pipeline.pipeline_steps.find_by(position: previous_step_position)
-    previous_step ? [previous_step.id] : []
+    previous_step ? [ previous_step.id ] : []
   end
 
   def can_execute_in_parallel?
     # Simple heuristic: can execute in parallel if there are independent extract steps
-    extract_steps = pipeline.pipeline_steps.where(step_type: 'extract')
+    extract_steps = pipeline.pipeline_steps.where(step_type: "extract")
     extract_steps.count > 1
   end
 
@@ -456,13 +456,13 @@ class PipelineExecutionEngine
     current_group = []
 
     pipeline.pipeline_steps.order(:position).each do |step|
-      if step.step_type == 'extract' && current_group.empty?
+      if step.step_type == "extract" && current_group.empty?
         current_group << step
-      elsif step.step_type == 'extract' && current_group.last&.step_type == 'extract'
+      elsif step.step_type == "extract" && current_group.last&.step_type == "extract"
         current_group << step
       else
         groups << current_group unless current_group.empty?
-        current_group = [step]
+        current_group = [ step ]
       end
     end
 
@@ -473,13 +473,13 @@ class PipelineExecutionEngine
   def estimate_memory_usage(step)
     # Estimate memory usage based on step type (in MB)
     base_memory = {
-      'extract' => 100,
-      'transform' => 150,
-      'filter' => 75,
-      'validate' => 100,
-      'aggregate' => 200,
-      'load' => 125,
-      'custom' => 100
+      "extract" => 100,
+      "transform" => 150,
+      "filter" => 75,
+      "validate" => 100,
+      "aggregate" => 200,
+      "load" => 125,
+      "custom" => 100
     }
 
     base_memory[step.step_type] || 100
@@ -488,16 +488,16 @@ class PipelineExecutionEngine
   def calculate_cpu_requirements
     # Estimate CPU cores needed
     step_count = pipeline.pipeline_steps.count
-    parallel_capable_steps = pipeline.pipeline_steps.where(step_type: 'extract').count
+    parallel_capable_steps = pipeline.pipeline_steps.where(step_type: "extract").count
 
-    [@parallel ? [parallel_capable_steps, 4].min : 1, step_count].min
+    [ @parallel ? [ parallel_capable_steps, 4 ].min : 1, step_count ].min
   end
 
   def estimate_disk_usage
     # Estimate temporary disk space needed (in MB)
     pipeline.pipeline_steps.sum do |step|
       case step.step_type
-      when 'extract', 'load'
+      when "extract", "load"
         500  # Larger for I/O operations
       else
         100  # Smaller for processing operations
@@ -507,7 +507,7 @@ class PipelineExecutionEngine
 
   def estimate_network_usage
     # Estimate network bandwidth (in Mbps)
-    io_steps = pipeline.pipeline_steps.where(step_type: ['extract', 'load']).count
+    io_steps = pipeline.pipeline_steps.where(step_type: [ "extract", "load" ]).count
     io_steps * 10  # 10 Mbps per I/O step
   end
 end
