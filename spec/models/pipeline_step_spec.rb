@@ -286,6 +286,45 @@ RSpec.describe PipelineStep, type: :model do
         expect(duplicate.pipeline).to be_nil
       end
     end
+
+    describe 'placeholder methods' do
+      let(:simple_step) { PipelineStep.new(name: 'Test', step_type: 'extract', position: 1) }
+
+      describe '#extract_from_file' do
+        it 'raises NotImplementedError with descriptive message' do
+          expect { simple_step.send(:extract_from_file, {}) }
+            .to raise_error(NotImplementedError, 'extract_from_file must be implemented by subclasses')
+        end
+      end
+
+      describe '#extract_from_api' do
+        it 'raises NotImplementedError with descriptive message' do
+          expect { simple_step.send(:extract_from_api, {}) }
+            .to raise_error(NotImplementedError, 'extract_from_api must be implemented by subclasses')
+        end
+      end
+
+      describe '#load_to_database' do
+        it 'raises NotImplementedError with descriptive message' do
+          expect { simple_step.send(:load_to_database, [], {}) }
+            .to raise_error(NotImplementedError, 'load_to_database must be implemented by subclasses')
+        end
+      end
+
+      describe '#load_to_file' do
+        it 'raises NotImplementedError with descriptive message' do
+          expect { simple_step.send(:load_to_file, [], {}) }
+            .to raise_error(NotImplementedError, 'load_to_file must be implemented by subclasses')
+        end
+      end
+
+      describe '#load_to_api' do
+        it 'raises NotImplementedError with descriptive message' do
+          expect { simple_step.send(:load_to_api, [], {}) }
+            .to raise_error(NotImplementedError, 'load_to_api must be implemented by subclasses')
+        end
+      end
+    end
   end
 
   describe 'callbacks' do

@@ -34,8 +34,11 @@ class Pipeline < ApplicationRecord
   end
 
   def add_step(step_attributes)
-    max_position = pipeline_steps.maximum(:position) || 0
-    pipeline_steps.create!(step_attributes.merge(position: max_position + 1))
+    transaction do
+      lock!
+      max_position = pipeline_steps.maximum(:position) || 0
+      pipeline_steps.create!(step_attributes.merge(position: max_position + 1))
+    end
   end
 
   def reorder_steps(step_ids)
@@ -71,7 +74,7 @@ class Pipeline < ApplicationRecord
     return nil unless scheduled?
 
     if schedule_cron.present?
-      require 'cron_parser'
+
       cron = CronParser.new(schedule_cron)
       cron.next(Time.current)
     elsif schedule_interval.present? && last_run_at.present?
@@ -92,8 +95,8 @@ class Pipeline < ApplicationRecord
 
   def update_next_run_schedule
     if scheduled? && (schedule_cron.present? || schedule_interval.present?)
-      self.next_run_at = calculate_next_run
-      save! if next_run_at_changed?
+      new_next_run_at = calculate_next_run
+      update_columns(next_run_at: new_next_run_at) if new_next_run_at != next_run_at
     end
   end
 end

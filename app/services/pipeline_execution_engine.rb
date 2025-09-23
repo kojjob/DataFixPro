@@ -21,8 +21,13 @@ class PipelineExecutionEngine
     begin
       execute_pipeline_steps(pipeline_run)
       finalize_successful_run(pipeline_run)
-    rescue => e
+    rescue StandardError => e
       handle_execution_error(pipeline_run, e)
+    rescue Exception => e
+      # Log critical errors that shouldn't normally be caught
+      @logger.fatal "Critical error in pipeline execution: #{e.message}"
+      handle_execution_error(pipeline_run, e)
+      raise
     end
   end
 
@@ -244,7 +249,14 @@ class PipelineExecutionEngine
     end
 
     # Wait for all threads to complete
-    threads.each(&:join)
+    threads.each { |t| t.join(30) } # 30 second timeout
+    
+    # Check if any threads are still alive
+    stuck_threads = threads.select(&:alive?)
+    if stuck_threads.any?
+      stuck_threads.each(&:kill)
+      raise PipelineExecutionError, "Parallel execution timeout - some steps did not complete"
+    end
 
     # Check if any step failed
     failed_steps = results.select { |_, result| !result[:success] }
@@ -259,8 +271,17 @@ class PipelineExecutionEngine
   def execute_step(step, input_data, step_execution)
     start_time = Time.current
 
-    # Update input rows count
-    input_count = Array(input_data).count
+    # Update input rows count - efficiently handle different data types
+    input_count = case input_data
+                  when ActiveRecord::Relation
+                    input_data.count
+                  when Array
+                    input_data.size
+                  when nil
+                    0
+                  else
+                    input_data.respond_to?(:count) ? input_data.count : Array(input_data).count
+                  end
     step_execution.update!(input_rows: input_count)
 
     # Execute the step
