@@ -95,7 +95,7 @@ gem "lockbox", "~> 1.3"                      # Field encryption
 
 # Performance
 gem "oj", "~> 3.16"                          # Fast JSON parser
-gem "rack-mini-profiler", "~> 3.3"           # Performance profiling
+gem "rack-mini-profiler", "~> 4.0"           # Performance profiling
 
 # Utilities
 gem "friendly_id", "~> 5.5"                  # SEO-friendly URLs
