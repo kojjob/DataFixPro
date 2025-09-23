@@ -374,7 +374,6 @@ GEM
       net-smtp
     marcel (1.1.0)
     matrix (0.4.3)
-    method_source (1.1.0)
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
@@ -710,10 +709,9 @@ GEM
     vcr (6.3.1)
       base64
     version_gem (1.1.9)
-    view_component (3.23.2)
-      activesupport (>= 5.2.0, < 8.1)
+    view_component (4.0.2)
+      activesupport (>= 7.1.0, < 8.1)
       concurrent-ruby (~> 1)
-      method_source (~> 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
     web-console (4.2.1)
@@ -834,7 +832,7 @@ DEPENDENCIES
   turbo-rails
   tzinfo-data
   vcr (~> 6.2)
-  view_component (~> 3.7)
+  view_component (~> 4.0)
   web-console
   webmock (~> 3.19)
   whenever (~> 1.0)

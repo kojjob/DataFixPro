@@ -81,7 +81,7 @@ gem "image_processing", "~> 1.12"            # Image processing
 gem "active_storage_validations", "~> 1.1"   # File validations
 
 # UI Components
-gem "view_component", "~> 3.7"               # Component-based views
+gem "view_component", "~> 4.0"               # Component-based views
 gem "lookbook", "~> 2.2"                     # Component previews
 
 # Admin & Monitoring
