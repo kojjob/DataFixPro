@@ -1,10 +1,10 @@
 class Pipeline < ApplicationRecord
+  acts_as_tenant :tenant
+
   belongs_to :tenant
   belongs_to :data_source
   has_many :pipeline_steps, -> { order(:position) }, dependent: :destroy
   has_many :pipeline_runs, dependent: :destroy
-
-  acts_as_tenant :tenant
 
   validates :name, presence: true
   validates :status, presence: true, inclusion: { in: %w[draft active paused archived] }

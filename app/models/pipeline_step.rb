@@ -1,4 +1,6 @@
 class PipelineStep < ApplicationRecord
+  acts_as_tenant through: :pipeline
+
   belongs_to :pipeline
   has_many :step_executions, dependent: :destroy
 
