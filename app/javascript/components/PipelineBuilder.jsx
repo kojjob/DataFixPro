@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, {
   ReactFlowProvider,
   addEdge,
@@ -12,6 +12,11 @@ import ReactFlow, {
   MarkerType
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+
+// Import custom hooks
+import useHistory from '../hooks/useHistory';
+import useKeyboardShortcuts from '../hooks/useKeyboardShortcuts';
+import useMultiSelect from '../hooks/useMultiSelect';
 
 // Import custom node types
 import DataSourceNode from './nodes/DataSourceNode';
@@ -139,16 +144,119 @@ const PipelineBuilderFlow = ({ pipelineId, pipelineName }) => {
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [selectedNode, setSelectedNode] = useState(null);
-  const { project } = useReactFlow();
+  const { project, getNode, getNodes, getEdges } = useReactFlow();
 
   let id = 2; // Node ID counter
 
   const getId = () => `node_${id++}`;
 
+  // Initialize history hook for undo/redo
+  const {
+    currentState,
+    pushState,
+    undo,
+    redo,
+    canUndo,
+    canRedo,
+    clearHistory
+  } = useHistory({ nodes: initialNodes, edges: initialEdges }, 50);
+
+  // Initialize multi-select hook
+  const multiSelect = useMultiSelect(nodes, {
+    onDelete: (nodeIds) => {
+      setNodes((nds) => nds.filter(node => !nodeIds.includes(node.id)));
+      setEdges((eds) => eds.filter(edge =>
+        !nodeIds.includes(edge.source) && !nodeIds.includes(edge.target)
+      ));
+    },
+    onDuplicate: (nodeIds) => {
+      const nodesToDuplicate = nodes.filter(node => nodeIds.includes(node.id));
+      const newNodes = nodesToDuplicate.map(node => ({
+        ...node,
+        id: getId(),
+        position: {
+          x: node.position.x + 50,
+          y: node.position.y + 50
+        }
+      }));
+      setNodes((nds) => [...nds, ...newNodes]);
+    },
+    onMove: (nodeIds, delta) => {
+      setNodes((nds) => nds.map(node => {
+        if (nodeIds.includes(node.id)) {
+          return {
+            ...node,
+            position: {
+              x: node.position.x + delta.dx,
+              y: node.position.y + delta.dy
+            }
+          };
+        }
+        return node;
+      }));
+    }
+  });
+
+  // Initialize keyboard shortcuts
+  const shortcuts = {
+    'ctrl+z': () => canUndo && handleUndo(),
+    'cmd+z': () => canUndo && handleUndo(),
+    'ctrl+y': () => canRedo && handleRedo(),
+    'cmd+y': () => canRedo && handleRedo(),
+    'ctrl+shift+z': () => canRedo && handleRedo(),
+    'cmd+shift+z': () => canRedo && handleRedo(),
+    'delete': () => multiSelect.hasSelection && multiSelect.deleteSelected(),
+    'backspace': () => multiSelect.hasSelection && multiSelect.deleteSelected(),
+    'ctrl+a': () => multiSelect.selectAll(),
+    'cmd+a': () => multiSelect.selectAll(),
+    'ctrl+d': () => multiSelect.hasSelection && multiSelect.duplicateSelected(),
+    'cmd+d': () => multiSelect.hasSelection && multiSelect.duplicateSelected(),
+    'escape': () => {
+      multiSelect.clearSelection();
+      setSelectedNode(null);
+    },
+    'ctrl+s': (e) => {
+      e.preventDefault();
+      savePipeline();
+    },
+    'cmd+s': (e) => {
+      e.preventDefault();
+      savePipeline();
+    }
+  };
+
+  useKeyboardShortcuts(shortcuts, { preventDefault: true });
+
+  // Sync history with current state
+  useEffect(() => {
+    if (currentState.nodes !== nodes || currentState.edges !== edges) {
+      // Apply state from history (undo/redo)
+      setNodes(currentState.nodes);
+      setEdges(currentState.edges);
+    }
+  }, [currentState]);
+
+  // Push state to history when nodes or edges change
+  const pushStateToHistory = useCallback(() => {
+    pushState({ nodes, edges });
+  }, [nodes, edges, pushState]);
+
+  // Undo handler
+  const handleUndo = useCallback(() => {
+    undo();
+  }, [undo]);
+
+  // Redo handler
+  const handleRedo = useCallback(() => {
+    redo();
+  }, [redo]);
+
   // Handle connections between nodes
   const onConnect = useCallback((params) => {
-    setEdges((eds) => addEdge({ ...params, ...defaultEdgeOptions }, eds));
-  }, [setEdges]);
+    const newEdges = addEdge({ ...params, ...defaultEdgeOptions }, edges);
+    setEdges(newEdges);
+    pushStateToHistory();
+  }, [edges, setEdges, pushStateToHistory]);
 
   // Handle drop event
   const onDragOver = useCallback((event) => {
@@ -182,8 +290,9 @@ const PipelineBuilderFlow = ({ pipelineId, pipelineName }) => {
       };
 
       setNodes((nds) => nds.concat(newNode));
+      pushStateToHistory();
     },
-    [project, setNodes]
+    [project, setNodes, pushStateToHistory]
   );
 
   // Get initial data for different node types
@@ -204,10 +313,20 @@ const PipelineBuilderFlow = ({ pipelineId, pipelineName }) => {
     }
   };
 
-  // Handle node click for configuration
+  // Handle node click for configuration and selection
   const onNodeClick = useCallback((event, node) => {
-    setSelectedNode(node);
-  }, []);
+    if (event.ctrlKey || event.metaKey) {
+      // Add to selection with Ctrl/Cmd
+      multiSelect.toggleNode(node.id);
+    } else if (event.shiftKey && multiSelect.hasSelection) {
+      // Range selection with Shift (simplified - could implement smarter range logic)
+      multiSelect.addToSelection(node.id);
+    } else {
+      // Single selection
+      multiSelect.selectNode(node.id);
+      setSelectedNode(node);
+    }
+  }, [multiSelect]);
 
   // Handle node data update from configuration panel
   const handleNodeDataChange = useCallback((nodeId, newData) => {
@@ -257,14 +376,48 @@ const PipelineBuilderFlow = ({ pipelineId, pipelineName }) => {
 
       <div className="flex-1 flex flex-col">
         <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-gray-800">
-            {pipelineName || 'New Pipeline'}
-          </h2>
+          <div className="flex items-center gap-4">
+            <h2 className="text-xl font-semibold text-gray-800">
+              {pipelineName || 'New Pipeline'}
+            </h2>
+            {multiSelect.hasSelection && (
+              <span className="text-sm text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                {multiSelect.selectionCount} node{multiSelect.selectionCount !== 1 ? 's' : ''} selected
+              </span>
+            )}
+          </div>
           <div className="flex gap-3">
+            <div className="flex gap-1 mr-3">
+              <button
+                onClick={handleUndo}
+                disabled={!canUndo}
+                className={`px-3 py-2 rounded-lg transition-colors ${
+                  canUndo
+                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }`}
+                title="Undo (Ctrl+Z)"
+              >
+                ↶
+              </button>
+              <button
+                onClick={handleRedo}
+                disabled={!canRedo}
+                className={`px-3 py-2 rounded-lg transition-colors ${
+                  canRedo
+                    ? 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                    : 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                }`}
+                title="Redo (Ctrl+Y)"
+              >
+                ↷
+              </button>
+            </div>
             <button
               onClick={() => {
                 setNodes(initialNodes);
                 setEdges([]);
+                clearHistory();
               }}
               className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors"
             >
@@ -273,6 +426,7 @@ const PipelineBuilderFlow = ({ pipelineId, pipelineName }) => {
             <button
               onClick={savePipeline}
               className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              title="Save Pipeline (Ctrl+S)"
             >
               Save Pipeline
             </button>
