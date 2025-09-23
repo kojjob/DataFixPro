@@ -12,6 +12,7 @@ gem "puma", ">= 6.0"                        # Application server
 gem "importmap-rails"                        # JavaScript with ESM import maps
 gem "turbo-rails"                            # Hotwire's SPA-like functionality
 gem "stimulus-rails"                         # Hotwire's JavaScript framework
+gem "jsbundling-rails"                       # JavaScript bundling for React Flow
 gem "tailwindcss-rails"                      # Tailwind CSS
 gem "jbuilder"                               # JSON API builder
 
