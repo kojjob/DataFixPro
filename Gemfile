@@ -50,7 +50,7 @@ gem "jsonapi-serializer", "~> 2.2"          # Fast JSON serialization
 gem "graphql", "~> 2.2"                      # GraphQL support
 
 # Data Processing & ETL
-gem "activerecord-import", "~> 1.5"          # Bulk data import
+gem "activerecord-import", "~> 2.2"          # Bulk data import
 gem "parallel", "~> 1.24"                    # Parallel processing
 gem "ruby-progressbar", "~> 1.13"            # Progress bars
 gem "creek", "~> 2.6"                        # Fast Excel reader
