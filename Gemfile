@@ -65,8 +65,8 @@ gem "faraday", "~> 2.8"                      # HTTP client with middleware
 # Analytics & Visualization
 gem "groupdate", "~> 6.4"                    # Group temporal data
 gem "chartkick", "~> 5.0"                    # Charts
-gem "blazer", "~> 3.0"                       # Business intelligence
-gem "ahoy_matey", "~> 5.0"                   # Analytics tracking
+# gem "blazer", "~> 3.0"                       # Business intelligence - Needs configuration
+# gem "ahoy_matey", "~> 5.0"                   # Analytics tracking - Needs configuration
 
 # Machine Learning & AI
 gem "ruby-openai", "~> 6.0"                  # OpenAI integration
@@ -85,8 +85,8 @@ gem "view_component", "~> 3.7"               # Component-based views
 gem "lookbook", "~> 2.2"                     # Component previews
 
 # Admin & Monitoring
-gem "rails_admin", "~> 3.1"                  # Admin interface
-gem "paper_trail", "~> 15.1"                 # Audit trail
+# gem "rails_admin", "~> 3.1"                  # Admin interface - Not compatible with Rails 8.1 beta
+# gem "paper_trail", "~> 15.1"                 # Audit trail - Not compatible with Rails 8.1 beta
 gem "lograge", "~> 0.14"                     # Better logging
 
 # Security

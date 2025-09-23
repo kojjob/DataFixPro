@@ -147,5 +147,5 @@ Consider adding these MCPs based on project needs:
 
 ---
 
-*Last Updated: September 2024*
+*Last Updated: September 2025*
 *Maintained by: Kojo's Development Environment*
