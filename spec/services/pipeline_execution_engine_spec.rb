@@ -392,7 +392,7 @@ RSpec.describe PipelineExecutionEngine, type: :service do
 
     context 'with Array' do
       it 'uses size method instead of count' do
-        array = [1, 2, 3, 4, 5]
+        array = [ 1, 2, 3, 4, 5 ]
         expect(array).not_to receive(:count)
 
         expect(test_engine.send(:calculate_non_materializing_count, array)).to eq(5)
@@ -484,7 +484,7 @@ RSpec.describe PipelineExecutionEngine, type: :service do
         expect(logger).to receive(:info).at_least(:once)
 
         # Allow Array conversion
-        allow(Array).to receive(:call).with(unknown).and_return([1, 2])
+        allow(Array).to receive(:call).with(unknown).and_return([ 1, 2 ])
 
         expect(test_engine.send(:calculate_non_materializing_count, unknown)).to eq(2)
       end
