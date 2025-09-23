@@ -10,21 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_09_23_020540) do
+ActiveRecord::Schema[8.1].define(version: 2025_09_23_021316) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
   enable_extension "pgcrypto"
   enable_extension "uuid-ossp"
 
-  create_table "dashboards", id: :serial, force: :cascade do |t|
+  create_table "dashboards", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "name", null: false
-    t.integer "tenant_id", null: false
+    t.bigint "tenant_id", null: false
     t.datetime "updated_at", precision: nil, null: false
   end
 
-  create_table "data_sources", id: :serial, force: :cascade do |t|
+  create_table "data_sources", force: :cascade do |t|
     t.jsonb "connection_errors", default: []
     t.jsonb "connection_options", default: {}
     t.string "connection_status", default: "disconnected"
@@ -38,7 +38,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_23_020540) do
     t.string "name", null: false
     t.text "password"
     t.integer "port"
-    t.integer "tenant_id", null: false
+    t.bigint "tenant_id", null: false
     t.datetime "updated_at", precision: nil, null: false
     t.string "username"
     t.index ["connection_status"], name: "index_data_sources_on_connection_status"
@@ -81,8 +81,9 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_23_020540) do
     t.index ["step_type"], name: "index_pipeline_steps_on_step_type"
   end
 
-  create_table "pipelines", id: :serial, force: :cascade do |t|
+  create_table "pipelines", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
+    t.bigint "data_source_id"
     t.text "description"
     t.datetime "last_run_at"
     t.string "name", null: false
@@ -91,22 +92,23 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_23_020540) do
     t.integer "schedule_interval"
     t.string "schedule_type"
     t.string "status", default: "draft", null: false
-    t.integer "tenant_id", null: false
+    t.bigint "tenant_id", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["data_source_id"], name: "index_pipelines_on_data_source_id"
   end
 
-  create_table "roles", id: :serial, force: :cascade do |t|
+  create_table "roles", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "name", null: false
     t.jsonb "permissions", default: {}
-    t.integer "tenant_id", null: false
+    t.bigint "tenant_id", null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["tenant_id", "name"], name: "index_roles_on_tenant_id_and_name", unique: true
   end
 
   create_table "roles_users", primary_key: ["role_id", "user_id"], force: :cascade do |t|
-    t.integer "role_id", null: false
-    t.integer "user_id", null: false
+    t.bigint "role_id", null: false
+    t.bigint "user_id", null: false
   end
 
   create_table "step_executions", force: :cascade do |t|
@@ -132,7 +134,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_23_020540) do
     t.index ["step_type"], name: "index_step_executions_on_step_type"
   end
 
-  create_table "tenants", id: :serial, force: :cascade do |t|
+  create_table "tenants", force: :cascade do |t|
     t.string "api_key", null: false
     t.datetime "created_at", precision: nil, null: false
     t.string "custom_domain"
@@ -148,25 +150,26 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_23_020540) do
     t.index ["subdomain"], name: "index_tenants_on_subdomain", unique: true
   end
 
-  create_table "users", id: :serial, force: :cascade do |t|
+  create_table "users", force: :cascade do |t|
     t.datetime "created_at", precision: nil, null: false
     t.string "email", null: false
     t.string "name"
     t.string "password_digest"
-    t.integer "tenant_id", null: false
+    t.bigint "tenant_id", null: false
     t.datetime "updated_at", precision: nil, null: false
     t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_and_email", unique: true
   end
 
-  add_foreign_key "dashboards", "tenants", name: "dashboards_tenant_id_fkey", on_delete: :cascade
-  add_foreign_key "data_sources", "tenants", name: "data_sources_tenant_id_fkey", on_delete: :cascade
+  add_foreign_key "dashboards", "tenants", on_delete: :cascade
+  add_foreign_key "data_sources", "tenants", on_delete: :cascade
   add_foreign_key "pipeline_runs", "pipelines", on_delete: :cascade
   add_foreign_key "pipeline_steps", "pipelines", on_delete: :cascade
-  add_foreign_key "pipelines", "tenants", name: "pipelines_tenant_id_fkey", on_delete: :cascade
-  add_foreign_key "roles", "tenants", name: "roles_tenant_id_fkey", on_delete: :cascade
-  add_foreign_key "roles_users", "roles", name: "roles_users_role_id_fkey", on_delete: :cascade
-  add_foreign_key "roles_users", "users", name: "roles_users_user_id_fkey", on_delete: :cascade
+  add_foreign_key "pipelines", "data_sources", on_delete: :cascade
+  add_foreign_key "pipelines", "tenants", on_delete: :cascade
+  add_foreign_key "roles", "tenants", on_delete: :cascade
+  add_foreign_key "roles_users", "roles", on_delete: :cascade
+  add_foreign_key "roles_users", "users", on_delete: :cascade
   add_foreign_key "step_executions", "pipeline_runs", on_delete: :cascade
   add_foreign_key "step_executions", "pipeline_steps", on_delete: :cascade
-  add_foreign_key "users", "tenants", name: "users_tenant_id_fkey", on_delete: :cascade
+  add_foreign_key "users", "tenants", on_delete: :cascade
 end
