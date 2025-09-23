@@ -45,7 +45,7 @@ gem "omniauth-rails_csrf_protection"         # CSRF protection
 gem "grape", "~> 2.0"                        # REST API framework
 gem "grape-entity", "~> 1.0"                 # API entities
 gem "grape-swagger", "~> 2.0"                # API documentation
-gem "rack-cors", "~> 2.0"                    # CORS support
+gem "rack-cors", "~> 3.0"                    # CORS support
 gem "jsonapi-serializer", "~> 2.2"          # Fast JSON serialization
 gem "graphql", "~> 2.2"                      # GraphQL support
 
