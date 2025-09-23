@@ -45,12 +45,14 @@ class PipelineStep < ApplicationRecord
         data: result[:data],
         metadata: result[:metadata] || {}
       }
-    rescue => e
+    rescue StandardError => e
+      Rails.logger.error "Step execution failed for #{name}: #{e.message}"
+      Rails.logger.error e.backtrace.join("\n")
       {
         success: false,
         error: e.message,
         data: input_data,
-        metadata: { error_type: e.class.name }
+        metadata: { error_type: e.class.name, step_id: id }
       }
     end
   end
@@ -88,8 +90,12 @@ class PipelineStep < ApplicationRecord
   end
 
   def set_position
-    max_position = pipeline&.pipeline_steps&.maximum(:position) || 0
-    self.position = max_position + 1
+    return unless pipeline
+
+    pipeline.with_lock do
+      max_position = pipeline.pipeline_steps.maximum(:position) || 0
+      self.position = max_position + 1
+    end
   end
 
   def skip_execution(input_data)
@@ -137,7 +143,16 @@ class PipelineStep < ApplicationRecord
       evaluate_condition(row, condition)
     end
 
-    original_count = Array(input_data).count
+    original_count = case input_data
+                    when ActiveRecord::Relation
+                      input_data.count
+                    when Array
+                      input_data.size
+                    when nil
+                      0
+                    else
+                      input_data.respond_to?(:count) ? input_data.count : Array(input_data).count
+                    end
     filtered_count = original_count - filtered_data.count
 
     {
@@ -233,13 +248,11 @@ class PipelineStep < ApplicationRecord
   end
 
   def extract_from_file(config)
-    # File extraction implementation
-    { data: [], metadata: { rows_extracted: 0 } }
+    raise NotImplementedError, "extract_from_file must be implemented by subclasses"
   end
 
   def extract_from_api(config)
-    # API extraction implementation
-    { data: [], metadata: { rows_extracted: 0 } }
+    raise NotImplementedError, "extract_from_api must be implemented by subclasses"
   end
 
   def apply_transformations(row, transformations)
@@ -355,18 +368,15 @@ class PipelineStep < ApplicationRecord
   end
 
   def load_to_database(input_data, config)
-    # Database loading implementation
-    { data: input_data, metadata: { rows_loaded: Array(input_data).count } }
+    raise NotImplementedError, "load_to_database must be implemented by subclasses"
   end
 
   def load_to_file(input_data, config)
-    # File loading implementation
-    { data: input_data, metadata: { rows_loaded: Array(input_data).count } }
+    raise NotImplementedError, "load_to_file must be implemented by subclasses"
   end
 
   def load_to_api(input_data, config)
-    # API loading implementation
-    { data: input_data, metadata: { rows_loaded: Array(input_data).count } }
+    raise NotImplementedError, "load_to_api must be implemented by subclasses"
   end
 
   # Validation methods for different step configurations
