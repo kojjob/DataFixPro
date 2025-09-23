@@ -1,5 +1,22 @@
 Rails.application.routes.draw do
-  get "pipeline_builder/index"
+  # Pipeline builder routes
+  resources :pipeline_builders, only: [:new, :edit, :create, :update] do
+    member do
+      get :load_pipeline
+    end
+  end
+
+  # API endpoints for pipeline operations
+  namespace :api do
+    resources :pipelines, only: [:create, :update] do
+      member do
+        post :run
+        post :stop
+        get :status
+      end
+    end
+  end
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -11,5 +28,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "pipeline_builders#new"
 end
