@@ -69,7 +69,7 @@ gem "blazer", "~> 3.0"                       # Business intelligence
 gem "ahoy_matey", "~> 5.0"                   # Analytics tracking
 
 # Machine Learning & AI
-gem "ruby-openai", "~> 6.0"                  # OpenAI integration
+gem "ruby-openai", "~> 8.3"                  # OpenAI integration
 gem "tiktoken_ruby", "~> 0.0.7"              # Token counting
 gem "neighbor", "~> 0.3"                     # Nearest neighbor search
 
