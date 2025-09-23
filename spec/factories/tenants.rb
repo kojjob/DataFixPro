@@ -2,32 +2,34 @@ FactoryBot.define do
   factory :tenant do
     sequence(:name) { |n| "Company #{n}" }
     sequence(:subdomain) { |n| "company-#{n}" }
-    plan { 'starter' }
-    status { 'active' }
+    sequence(:api_key) { |n| "api_key_#{n}" }
+    plan { "starter" }
+    status { "active" }
+    plan_changes { [] }
 
     settings do
       {
-        timezone: 'UTC',
-        date_format: 'YYYY-MM-DD',
-        currency: 'USD',
-        language: 'en'
+        timezone: "UTC",
+        date_format: "YYYY-MM-DD",
+        currency: "USD",
+        language: "en"
       }
     end
 
     trait :professional do
-      plan { 'professional' }
+      plan { "professional" }
     end
 
     trait :enterprise do
-      plan { 'enterprise' }
+      plan { "enterprise" }
     end
 
     trait :inactive do
-      status { 'inactive' }
+      status { "inactive" }
     end
 
     trait :suspended do
-      status { 'suspended' }
+      status { "suspended" }
       suspended_at { Time.current }
     end
 
