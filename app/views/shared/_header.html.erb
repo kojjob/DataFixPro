@@ -1,0 +1,215 @@
+<header data-controller="header mobile-menu" class="sticky top-0 z-50 transition-all duration-300 bg-transparent will-change-transform">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-20 items-center justify-between">
+      <!-- Logo and brand -->
+      <div class="flex items-center">
+        <%= link_to "/", class: "flex items-center gap-3 group" do %>
+          <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center transition-transform group-hover:scale-105">
+            <span class="text-white font-bold text-lg">D</span>
+          </div>
+          <span class="text-xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">DataFixPro</span>
+        <% end %>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden lg:flex items-center gap-8" aria-label="Main navigation">
+        <!-- Product Dropdown -->
+        <div class="relative group" data-controller="dropdown">
+          <button class="flex items-center gap-1 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors" data-action="click->dropdown#toggle" data-dropdown-target="trigger">
+            Product
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div class="absolute top-full left-0 mt-2 w-80 bg-white/98 dark:bg-slate-800/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 dark:border-slate-700/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200" data-dropdown-target="menu" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
+            <div class="p-6">
+              <div class="grid grid-cols-1 gap-4">
+                <a href="#features" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-indigo-500 to-indigo-600 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-slate-900 dark:text-white group-hover/item:text-indigo-600 dark:group-hover/item:text-indigo-400">Data Connectors</div>
+                    <div class="text-sm text-slate-600 dark:text-slate-400">100+ pre-built integrations</div>
+                  </div>
+                </a>
+
+                <a href="#features" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-slate-900 dark:text-white group-hover/item:text-purple-600 dark:group-hover/item:text-purple-400">ETL Pipelines</div>
+                    <div class="text-sm text-slate-600 dark:text-slate-400">Visual and code-based transforms</div>
+                  </div>
+                </a>
+
+                <a href="#features" class="group/item flex items-start gap-3 p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="h-10 w-10 rounded-lg bg-gradient-to-br from-pink-500 to-pink-600 flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-slate-900 dark:text-white group-hover/item:text-pink-600 dark:group-hover/item:text-pink-400">Live Dashboards</div>
+                    <div class="text-sm text-slate-600 dark:text-slate-400">Real-time interactive analytics</div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Solutions Dropdown -->
+        <div class="relative group" data-controller="dropdown">
+          <button class="flex items-center gap-1 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors" data-action="click->dropdown#toggle" data-dropdown-target="trigger">
+            Solutions
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div class="absolute top-full left-0 mt-2 w-72 bg-white/98 dark:bg-slate-800/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 dark:border-slate-700/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200" data-dropdown-target="menu" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
+            <div class="p-6">
+              <div class="space-y-3">
+                <a href="#" class="block p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="font-semibold text-slate-900 dark:text-white">For Startups</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">Scale your data infrastructure</div>
+                </a>
+                <a href="#" class="block p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="font-semibold text-slate-900 dark:text-white">For Enterprise</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">Enterprise-grade security & compliance</div>
+                </a>
+                <a href="#" class="block p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="font-semibold text-slate-900 dark:text-white">For Agencies</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">Multi-client dashboard management</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Regular Links -->
+        <a href="#how-it-works" class="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">How it works</a>
+        <a href="#" class="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">Pricing</a>
+        
+        <!-- Resources Dropdown -->
+        <div class="relative group" data-controller="dropdown">
+          <button class="flex items-center gap-1 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors" data-action="click->dropdown#toggle" data-dropdown-target="trigger">
+            Resources
+            <svg class="w-4 h-4 transition-transform group-hover:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+          </button>
+          
+          <div class="absolute top-full right-0 mt-2 w-64 bg-white/98 dark:bg-slate-800/98 backdrop-blur-xl rounded-2xl shadow-2xl border border-slate-200/60 dark:border-slate-700/60 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200" data-dropdown-target="menu" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
+            <div class="p-6">
+              <div class="space-y-3">
+                <a href="#" class="block p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="font-semibold text-slate-900 dark:text-white">Documentation</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">API guides and tutorials</div>
+                </a>
+                <a href="#" class="block p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="font-semibold text-slate-900 dark:text-white">Blog</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">Latest insights and updates</div>
+                </a>
+                <a href="#" class="block p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="font-semibold text-slate-900 dark:text-white">Help Center</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">Support and FAQs</div>
+                </a>
+                <a href="#" class="block p-3 rounded-xl hover:bg-slate-50/80 dark:hover:bg-slate-700/60 transition-colors">
+                  <div class="font-semibold text-slate-900 dark:text-white">Community</div>
+                  <div class="text-sm text-slate-600 dark:text-slate-400">Connect with other users</div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Desktop CTA Buttons -->
+      <div class="hidden lg:flex items-center gap-3">
+        <a href="#" class="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white font-medium transition-colors">Sign in</a>
+        <a href="/demo" class="inline-flex items-center justify-center rounded-xl bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm px-4 py-2 text-sm font-semibold text-slate-900 dark:text-white border border-slate-200/50 dark:border-slate-700/50 shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+          Book demo
+        </a>
+        <a href="/signup" class="inline-flex items-center justify-center rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
+          Start free trial
+        </a>
+      </div>
+
+      <!-- Mobile menu button -->
+      <div class="lg:hidden">
+        <button class="inline-flex items-center justify-center rounded-xl p-2 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#toggle" data-mobile-menu-target="trigger">
+          <span class="sr-only">Open main menu</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-mobile-menu-target="openIcon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <svg class="h-6 w-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" data-mobile-menu-target="closeIcon">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile menu -->
+    <div class="lg:hidden hidden" data-mobile-menu-target="menu">
+      <div class="mt-4 rounded-2xl bg-white/98 dark:bg-slate-800/98 backdrop-blur-xl border border-slate-200/60 dark:border-slate-700/60 shadow-2xl" style="backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);">
+        <div class="p-6 space-y-6">
+          <!-- Mobile Product Section -->
+          <div>
+            <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Product</h3>
+            <div class="space-y-2 pl-4">
+              <a href="#features" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">Data Connectors</a>
+              <a href="#features" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">ETL Pipelines</a>
+              <a href="#features" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">Live Dashboards</a>
+            </div>
+          </div>
+
+          <!-- Mobile Solutions Section -->
+          <div>
+            <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Solutions</h3>
+            <div class="space-y-2 pl-4">
+              <a href="#" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">For Startups</a>
+              <a href="#" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">For Enterprise</a>
+              <a href="#" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">For Agencies</a>
+            </div>
+          </div>
+
+          <!-- Mobile Direct Links -->
+          <div class="space-y-3">
+            <a href="#how-it-works" class="block font-medium text-slate-900 dark:text-white" data-action="click->mobile-menu#menuItemClick">How it works</a>
+            <a href="#" class="block font-medium text-slate-900 dark:text-white" data-action="click->mobile-menu#menuItemClick">Pricing</a>
+          </div>
+
+          <!-- Mobile Resources Section -->
+          <div>
+            <h3 class="font-semibold text-slate-900 dark:text-white mb-3">Resources</h3>
+            <div class="space-y-2 pl-4">
+              <a href="#" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">Documentation</a>
+              <a href="#" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">Blog</a>
+              <a href="#" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">Help Center</a>
+              <a href="#" class="block text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors" data-action="click->mobile-menu#menuItemClick">Community</a>
+            </div>
+          </div>
+
+          <!-- Mobile CTA Buttons -->
+          <div class="pt-6 border-t border-slate-200/50 dark:border-slate-700/50 space-y-3">
+            <a href="#" class="block text-center font-medium text-slate-900 dark:text-white" data-action="click->mobile-menu#menuItemClick">Sign in</a>
+            <a href="/demo" class="block text-center rounded-xl bg-white dark:bg-slate-700 px-4 py-3 font-semibold text-slate-900 dark:text-white border border-slate-200 dark:border-slate-600 transition-colors hover:bg-slate-50 dark:hover:bg-slate-600" data-action="click->mobile-menu#menuItemClick">
+              Book demo
+            </a>
+            <a href="/signup" class="block text-center rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 px-4 py-3 font-semibold text-white transition-all hover:shadow-lg" data-action="click->mobile-menu#menuItemClick">
+              Start free trial
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_09_23_021316) do
+ActiveRecord::Schema[8.1].define(version: 2025_09_23_120126) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -155,8 +155,10 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_23_021316) do
     t.string "email", null: false
     t.string "name"
     t.string "password_digest"
+    t.string "status", default: "active", null: false
     t.bigint "tenant_id", null: false
     t.datetime "updated_at", precision: nil, null: false
+    t.index ["status"], name: "index_users_on_status"
     t.index ["tenant_id", "email"], name: "index_users_on_tenant_id_and_email", unique: true
   end
 
