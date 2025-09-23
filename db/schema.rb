@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_09_23_120126) do
+ActiveRecord::Schema[8.1].define(version: 2025_09_23_120729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "hstore"
   enable_extension "pg_catalog.plpgsql"
@@ -88,6 +88,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_09_23_120126) do
     t.datetime "last_run_at"
     t.string "name", null: false
     t.datetime "next_run_at"
+    t.jsonb "pipeline_config"
     t.string "schedule_cron"
     t.integer "schedule_interval"
     t.string "schedule_type"
