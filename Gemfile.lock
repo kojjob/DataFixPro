@@ -125,7 +125,7 @@ GEM
       erubi (>= 1.0.0)
       rack (>= 0.9.0)
       rouge (>= 1.0.0)
-    bigdecimal (3.2.3)
+    bigdecimal (3.3.1)
     bindex (0.8.1)
     binding_of_caller (1.0.1)
       debug_inspector (>= 1.2.0)
@@ -378,7 +378,7 @@ GEM
     mini_magick (5.3.1)
       logger
     mini_mime (1.1.5)
-    minitest (5.25.5)
+    minitest (5.26.0)
     msgpack (1.8.0)
     multi_json (1.17.0)
     multi_xml (0.7.2)
@@ -672,8 +672,8 @@ GEM
       railties (>= 6.0.0)
     stringio (3.1.7)
     stripe (10.15.0)
-    strong_migrations (1.8.0)
-      activerecord (>= 5.2)
+    strong_migrations (2.5.1)
+      activerecord (>= 7.1)
     tailwindcss-rails (4.3.0)
       railties (>= 7.0.0)
       tailwindcss-ruby (~> 4.0)
@@ -705,7 +705,7 @@ GEM
     unicode-display_width (3.2.0)
       unicode-emoji (~> 4.1)
     unicode-emoji (4.1.0)
-    uri (1.0.3)
+    uri (1.0.4)
     useragent (0.16.11)
     vcr (6.3.1)
       base64
@@ -826,7 +826,7 @@ DEPENDENCIES
   solid_queue
   stimulus-rails
   stripe (~> 10.0)
-  strong_migrations (~> 1.7)
+  strong_migrations (~> 2.5)
   tailwindcss-rails
   thruster
   tiktoken_ruby (~> 0.0.7)
