@@ -58,7 +58,7 @@ gem "roo", "~> 2.10"                         # Excel/CSV processing
 
 # Data Connectors (Essential ones)
 gem "aws-sdk-s3", "~> 1.140"                 # AWS S3 integration
-gem "stripe", "~> 10.0"                      # Stripe payments
+gem "stripe", "~> 17.0"                      # Stripe payments
 gem "httparty", "~> 0.21"                    # HTTP client for APIs
 gem "faraday", "~> 2.8"                      # HTTP client with middleware
 
