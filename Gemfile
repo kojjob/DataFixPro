@@ -30,7 +30,7 @@ gem "tzinfo-data", platforms: %i[windows jruby]
 gem "redis", ">= 5.0"                        # Redis for additional caching
 gem "connection_pool", "~> 2.4"              # Connection pooling
 gem "acts_as_tenant", "~> 1.0"               # Multi-tenant support
-gem "strong_migrations", "~> 1.7"            # Safe database migrations
+gem "strong_migrations", "~> 2.5"            # Safe database migrations
 
 # Authentication & Authorization
 gem "bcrypt", "~> 3.1.7"                     # Password encryption
