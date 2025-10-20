@@ -91,7 +91,7 @@ gem "lograge", "~> 0.14"                     # Better logging
 
 # Security
 gem "rack-attack", "~> 6.7"                  # Rate limiting
-gem "lockbox", "~> 1.3"                      # Field encryption
+gem "lockbox", "~> 2.1"                      # Field encryption
 
 # Performance
 gem "oj", "~> 3.16"                          # Fast JSON parser
