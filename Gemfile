@@ -78,7 +78,7 @@ gem "searchkick", "~> 5.3"                   # Elasticsearch integration
 
 # File Processing
 gem "image_processing", "~> 1.12"            # Image processing
-gem "active_storage_validations", "~> 1.1"   # File validations
+gem "active_storage_validations", "~> 3.0"   # File validations
 
 # UI Components
 gem "view_component", "~> 3.7"               # Component-based views
